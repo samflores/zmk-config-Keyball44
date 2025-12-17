@@ -1,10 +1,15 @@
-#define DEFAULT 0
-#define NUM     1
-#define SYM     2
-#define FUN     3
-#define MOUSE   4
-#define SCROLL  5
-#define SNIPE   6
+/* Copyright (c) 2025 Sam Flores */
+
+#define LAYER_BASE    0
+#define LAYER_NUMBER  1
+#define LAYER_NAVIG   2
+#define LAYER_POINTER 3
+#define LAYER_QWERTY  4
+#define LAYER_WIN_MGR 5
+#define LAYER_FN      6
+#define LAYER_MEDIA   7
+#define LAYER_WEB     8
+#define LAYER_TOOLS   9
 
 #include <behaviors/mouse_keys.dtsi>
 #include <behaviors.dtsi>
@@ -13,7 +18,7 @@
 #include <dt-bindings/zmk/mouse.h>
 
 &lt {
-    tapping-term-ms = <240>;
+    tapping-term-ms = <200>;
     flavor = "balanced";
     quick-tap-ms = <150>;
 };
@@ -27,98 +32,301 @@
 &caps_word { continue-list = <UNDERSCORE MINUS>; };
 
 / {
-    // custom shift using mod-morph 
-
     behaviors {
-        cmqus: comma_question {
-            compatible = "zmk,behavior-mod-morph";
-            label = "COMMA_QUESTION";
+        // Tap dance for DEL (tap) / Shift+DEL (double tap)
+        td_del: tap_dance_del {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TAP_DANCE_DEL";
             #binding-cells = <0>;
-            bindings = <&kp COMMA>, <&kp QUESTION>;
-
-            mods = <(MOD_LSFT|MOD_RSFT)>;
+            tapping-term-ms = <200>;
+            bindings = <&kp DEL>, <&kp LS(DEL)>;
         };
 
-        dtsmi: dot_semi {
-            compatible = "zmk,behavior-mod-morph";
-            label = "DOT_SEMI";
+        // Tap dance for TAB (tap) / CAPS (double tap)
+        td_tab: tap_dance_tab {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TAP_DANCE_TAB";
             #binding-cells = <0>;
-            bindings = <&kp DOT>, <&kp SEMI>;
+            tapping-term-ms = <200>;
+            bindings = <&kp TAB>, <&kp CAPS>;
+        };
 
-            mods = <(MOD_LSFT|MOD_RSFT)>;
+        // Tap dance for ' (tap) / " (double tap)
+        td_quot: tap_dance_quot {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TAP_DANCE_QUOT";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp SQT>, <&kp DQT>;
+        };
+
+        // Tap dance for / (tap) / \ (double tap)
+        td_slsh: tap_dance_slsh {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TAP_DANCE_SLSH";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp SLASH>, <&kp BSLH>;
+        };
+
+        // Tap dance for ENTER (tap) / GUI+ENTER (double tap)
+        td_ent: tap_dance_ent {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TAP_DANCE_ENT";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp ENTER>, <&kp LG(ENTER)>;
+        };
+    };
+
+    // Combos for quick access
+    combos {
+        compatible = "zmk,combos";
+
+        // Layer switching combos
+        combo_qwerty {
+            timeout-ms = <50>;
+            key-positions = <28 31>; // B + K
+            bindings = <&to LAYER_QWERTY>;
+        };
+
+        combo_colemak {
+            timeout-ms = <50>;
+            key-positions = <28 31>; // B + N (on QWERTY)
+            bindings = <&to LAYER_BASE>;
+        };
+
+        // Parentheses combos
+        combo_lprn {
+            timeout-ms = <50>;
+            key-positions = <32 33>; // M + COMM
+            bindings = <&kp LPAR>;
+        };
+
+        combo_rprn {
+            timeout-ms = <50>;
+            key-positions = <33 34>; // COMM + DOT
+            bindings = <&kp RPAR>;
+        };
+
+        // Bracket combos
+        combo_lbrc {
+            timeout-ms = <50>;
+            key-positions = <19 20>; // L + U
+            bindings = <&kp LBKT>;
+        };
+
+        combo_rbrc {
+            timeout-ms = <50>;
+            key-positions = <20 21>; // U + Y
+            bindings = <&kp RBKT>;
+        };
+
+        // Accent combos (Right Alt + key combinations)
+        combo_acute {
+            timeout-ms = <50>;
+            key-positions = <26 15>; // E + T
+            bindings = <&kp RA(SQT)>;
+        };
+
+        combo_grave {
+            timeout-ms = <50>;
+            key-positions = <26 27>; // E + I
+            bindings = <&kp RA(GRAVE)>;
+        };
+
+        combo_circ {
+            timeout-ms = <50>;
+            key-positions = <26 16>; // E + V
+            bindings = <&kp RA(N6)>;
+        };
+
+        combo_tilde {
+            timeout-ms = <50>;
+            key-positions = <26 25>; // E + N
+            bindings = <&kp RA(LS(GRAVE))>;
+        };
+
+        combo_cedil {
+            timeout-ms = <50>;
+            key-positions = <26 15>; // E + C
+            bindings = <&kp RA(COMMA)>;
+        };
+
+        // One-shot layer combos
+        combo_web {
+            timeout-ms = <50>;
+            key-positions = <28 7>; // O + W
+            bindings = <&sl LAYER_WEB>;
+        };
+
+        combo_tools {
+            timeout-ms = <50>;
+            key-positions = <28 15>; // O + T
+            bindings = <&sl LAYER_TOOLS>;
         };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
-            label = "QWRT";
+        // Base Layer - Colemak-DH with home row mods
+        base_layer {
+            label = "BASE";
             bindings = <
-&kp ESCAPE      &kp Q     &kp W         &kp E        &kp R      &kp T                 &kp Y            &kp U  &kp I      &kp O    &kp P      &kp BACKSPACE
-&kp LCTRL       &kp A     &kp S         &kp D        &kp F      &kp G                 &kp H            &kp J  &kp K      &kp L    &kp SEMI   &kp SQT
-&kp LEFT_SHIFT  &kp Z     &kp X         &kp C        &kp V      &kp B                 &kp N            &kp M  &kp COMMA  &kp DOT  &kp SLASH  &kp RIGHT_SHIFT
-&kp LGUI        &kp LALT  &lt 6 ESCAPE  &lt 4 SPACE  &lt 5 TAB             &kp ENTER  &lt 2 BACKSPACE                                        &kp DELETE
+// ╭─────────────────────────────────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────────────────────────────╮
+    &kp AMPS   &kp Q        &kp W        &lt LAYER_FN F  &kp P        &kp G                  &kp J        &kp L        &kp U        &kp Y        &kp SEMI     &td_quot
+// ├─────────────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &kp STAR   &mt LGUI A   &mt LCTRL R  &mt LALT S      &mt LSHFT T  &kp D                  &kp H        &mt RSHFT N  &mt RALT E   &mt RCTRL I  &mt RGUI O   &kp MINUS
+// ├─────────────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &kp BSLH   &kp Z        &kp X        &lt LAYER_POINTER C  &lt LAYER_WIN_MGR V  &kp B     &kp K  &kp M  &lt LAYER_POINTER COMMA  &kp DOT  &kp SLASH  &kp EQUAL
+// ╰─────────────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
+    &kp LGUI   &kp LALT            &td_tab      &kp SPACE       &lt LAYER_NUMBER ESC         &lt LAYER_NAVIG BSPC  &lt LAYER_MEDIA ENTER          &kp DEL
+//                                  ╰────────────────────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────────╯
             >;
         };
 
+        // Number Layer
         number_layer {
             label = "NUM";
             bindings = <
-&none   &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4  &kp NUMBER_5              &kp NUMBER_6  &kp NUMBER_7  &kp NUMBER_8  &kp NUMBER_9  &kp NUMBER_0  &none
-&none   &kp LEFT      &kp DOWN      &kp UP_ARROW  &kp RIGHT     &none                     &none         &none         &none         &none         &none         &none
-&none   &none         &none         &none         &none         &none                     &none         &none         &trans        &trans        &none         &none
-&trans  &trans        &trans        &trans        &trans                          &trans  &trans                                                                &trans
+// ╭────────────────────────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────────────────────────────╮
+    &kp TILDE  &kp EXCL     &kp AT       &kp HASH     &kp DLLR     &kp PRCNT          &kp COMMA    &kp N7       &kp N8       &kp N9       &kp LBKT     &kp RBKT
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &kp LT     &kp LGUI     &kp LCTRL    &kp LALT     &kp LSHFT    &none              &kp PLUS     &kp N4       &kp N5       &kp N6       &kp MINUS    &kp EQUAL
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &kp GT     &kp CARET    &kp AMPS     &kp STAR     &kp UNDER    &td_quot           &kp STAR     &kp N1       &kp N2       &kp N3       &kp SLASH    &kp DOT
+// ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
+    &trans     &trans                       &none        &none        &trans          &kp BSPC     &kp N0                                 &trans
+//                                       ╰──────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
             >;
         };
 
-        symbol_layer {
-            label = "SYM";
+        // Navigation Layer
+        navig_layer {
+            label = "NAV";
             bindings = <
-&none   &kp EXCLAMATION  &kp AT_SIGN   &kp HASH      &kp DOLLAR    &kp PERCENT              &kp CARET       &kp AMPERSAND  &kp ASTERISK      &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &none
-&none   &bt BT_CLR       &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &trans                   &kp MINUS       &kp EQUAL      &kp LEFT_BRACKET  &kp RIGHT_BRACKET     &kp SQT                &none
-&none   &trans           &trans        &trans        &trans        &trans                   &kp UNDERSCORE  &kp PLUS       &trans            &trans                &kp NON_US_BACKSLASH   &none
-&trans  &trans           &trans        &trans        &trans                         &trans  &trans                                                                                        &trans
+// ╭────────────────────────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────────────────────────────╮
+    &none      &none        &none        &none        &none        &none              &none        &none        &none        &none        &none        &none
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &none      &kp LEFT     &kp UP       &kp DOWN     &kp RIGHT    &none              &none        &kp RSHFT    &kp RALT     &kp RCTRL    &kp RGUI     &none
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &none      &kp HOME     &kp PG_UP    &kp PG_DN    &kp END      &kp INS            &none        &none        &none        &none        &none        &none
+// ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
+    &trans     &trans                      &kp DEL      &kp BSPC     &kp ESC           &trans       &none                                  &trans
+//                                       ╰──────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
             >;
         };
 
-        function_layer {
-            label = "FUN";
+        // Pointer Layer (Mouse/Trackball)
+        pointer_layer {
+            label = "PTR";
             bindings = <
-&none   &kp F1  &kp F2   &kp F3   &kp F4   &none              &none  &none  &none  &none  &none  &none
-&none   &kp F5  &kp F6   &kp F7   &kp F8   &none              &none  &none  &none  &none  &none  &none
-&none   &kp F9  &kp F10  &kp F11  &kp F12  &none              &none  &none  &none  &none  &none  &none
-&trans  &trans  &trans   &trans   &trans              &trans  &mo 3                              &trans
+// ╭────────────────────────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────────────────────────────╮
+    &none      &none        &none        &none        &none        &none              &none        &none        &none        &none        &none        &none
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &none      &kp LGUI     &kp LCTRL    &kp LALT     &kp LSHFT    &none              &none        &kp RSHFT    &kp RALT     &kp RCTRL    &kp RGUI     &none
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &none      &none        &none        &none        &none        &none              &none        &mkp MB4     &mkp MB5     &none        &none        &none
+// ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
+    &trans     &trans                    &mkp MCLK    &mkp LCLK    &mkp RCLK          &mkp LCLK    &mkp RCLK                              &trans
+//                                     ╰────────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
             >;
         };
 
-        mouse_layer {
-            label = "MOUSE";
+        // QWERTY Layer
+        qwerty_layer {
+            label = "QWRT";
             bindings = <
-&none   &kp N1          &kp N2          &kp N3        &kp N4     &kp N5              &kp N6         &kp N7     &kp N8  &kp N9     &kp N0     &none
-&none   &kp LEFT_ARROW  &kp DOWN_ARROW  &kp UP_ARROW  &kp RIGHT  &none               &kp PAGE_UP    &mkp LCLK  &none   &mkp RCLK  &mkp MCLK  &none
-&none   &none           &none           &none         &none      &none               &kp PAGE_DOWN  &none      &none   &none      &none      &none
-&trans  &trans          &trans          &trans        &trans                 &trans  &trans                                                  &none
+// ╭────────────────────────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────────────────────────────╮
+    &kp AMPS   &kp Q        &kp W        &kp E        &kp R        &kp T              &kp Y        &kp U        &kp I        &kp O        &kp P        &td_quot
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &kp STAR   &mt LGUI A   &mt LCTRL S  &mt LALT D   &mt LSHFT F  &kp G              &kp H        &mt RSHFT J  &mt RALT K   &mt RCTRL L  &mt RGUI SEMI  &kp MINUS
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &kp BSLH   &kp Z        &kp X        &kp C        &kp V        &kp B              &kp N        &kp M        &kp COMMA    &kp DOT      &kp SLASH    &kp EQUAL
+// ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
+    &trans     &trans                    &kp SPACE    &lt LAYER_NUMBER ESC           &lt LAYER_NAVIG BSPC  &lt LAYER_MEDIA ENTER     &kp DEL
+//                                     ╰────────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
             >;
         };
 
-        scroll_layer {
-            label = "SCROLL";
+        // Window Manager Layer
+        win_mgr_layer {
+            label = "WMGR";
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans              &trans  &trans                                  &trans
+// ╭────────────────────────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────────────────────────────╮
+    &trans     &none        &none        &none        &none        &none              &kp LG(K)    &kp LG(N7)   &kp LG(N8)   &kp LG(N9)   &trans       &trans
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &trans     &none        &none        &none        &none        &none              &kp LG(J)    &kp LG(N4)   &kp LG(N5)   &kp LG(N6)   &kp LG(H)    &trans
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &trans     &none        &none        &none        &none        &none              &kp LG(ENTER) &kp LG(N1)  &kp LG(N2)   &kp LG(N3)   &kp LG(L)    &trans
+// ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
+    &trans     &trans                    &trans      &kp LG(R)    &trans              &trans       &kp LG(N0)                             &trans
+//                                     ╰────────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
             >;
         };
 
-        snipe_layer {
-            label = "SNIPE";
+        // Function Layer
+        fn_layer {
+            label = "FN";
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans              &trans  &trans                                  &trans
+// ╭────────────────────────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────────────────────────────╮
+    &trans     &none        &none        &none        &none        &none              &trans       &kp F7       &kp F8       &kp F9       &kp F10      &trans
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &trans     &none        &none        &none        &none        &none              &trans       &kp F4       &kp F5       &kp F6       &kp F11      &trans
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &trans     &none        &none        &none        &none        &none              &trans       &kp F1       &kp F2       &kp F3       &kp F12      &trans
+// ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
+    &trans     &trans                    &trans       &trans       &trans             &trans       &trans                                 &trans
+//                                     ╰────────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
+            >;
+        };
+
+        // Media Layer
+        media_layer {
+            label = "MEDIA";
+            bindings = <
+// ╭────────────────────────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────────────────────────────╮
+    &trans     &none        &none        &none        &none        &none              &trans       &none        &none        &none        &none        &trans
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &trans     &none        &none        &none        &none        &none              &trans       &kp C_PREV   &kp C_PP     &kp C_NEXT   &none        &trans
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &trans     &none        &none        &none        &none        &none              &trans       &kp C_VOL_UP &kp C_VOL_DN &none        &none        &trans
+// ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
+    &trans     &trans                    &kp C_MUTE   &kp C_PP     &trans             &trans       &trans                                 &trans
+//                                     ╰────────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
+            >;
+        };
+
+        // Web Layer (One-shot)
+        web_layer {
+            label = "WEB";
+            bindings = <
+// ╭────────────────────────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────────────────────────────╮
+    &kp RG(RC(Q))  &trans   &trans       &kp RG(RC(F)) &trans      &trans             &trans       &trans       &trans       &trans       &trans       &trans
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &trans     &trans       &trans       &trans       &trans       &trans             &trans       &trans       &trans       &trans       &trans       &trans
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &trans     &trans       &trans       &kp RG(RC(C)) &trans      &trans             &trans       &trans       &trans       &trans       &trans       &trans
+// ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
+    &trans     &trans                    &trans       &trans       &trans             &trans       &trans                                 &trans
+//                                     ╰────────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
+            >;
+        };
+
+        // Tools Layer (One-shot)
+        tools_layer {
+            label = "TOOLS";
+            bindings = <
+// ╭────────────────────────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────────────────────────────╮
+    &trans     &kp RG(RC(W)) &trans      &kp RG(RC(M)) &trans      &trans             &trans       &trans       &trans       &trans       &trans       &trans
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &trans     &trans       &trans       &trans       &trans       &trans             &trans       &trans       &trans       &trans       &trans       &trans
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &trans     &trans       &trans       &trans       &kp RG(RC(V)) &kp RG(RC(B))     &trans       &trans       &trans       &trans       &trans       &trans
+// ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
+    &trans     &trans                    &trans       &trans       &trans             &trans       &trans                                 &trans
+//                                     ╰────────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
             >;
         };
     };
