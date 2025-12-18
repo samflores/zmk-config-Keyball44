@@ -85,86 +85,80 @@
     combos {
         compatible = "zmk,combos";
 
-        // Layer switching combos
-        combo_qwerty {
+        // Layer switching combo - toggles between BASE and QWERTY
+        combo_layout_switch {
             timeout-ms = <50>;
-            key-positions = <28 31>; // B + K
-            bindings = <&to LAYER_QWERTY>;
-        };
-
-        combo_colemak {
-            timeout-ms = <50>;
-            key-positions = <28 31>; // B + N (on QWERTY)
-            bindings = <&to LAYER_BASE>;
+            key-positions = <29 30>; // B + K (Colemak) or B + N (QWERTY) - same physical keys
+            bindings = <&tog LAYER_QWERTY>;
         };
 
         // Parentheses combos
         combo_lprn {
             timeout-ms = <50>;
-            key-positions = <32 33>; // M + COMM
+            key-positions = <31 32>; // M + COMM
             bindings = <&kp LPAR>;
         };
 
         combo_rprn {
             timeout-ms = <50>;
-            key-positions = <33 34>; // COMM + DOT
+            key-positions = <32 33>; // COMM + DOT
             bindings = <&kp RPAR>;
         };
 
         // Bracket combos
         combo_lbrc {
             timeout-ms = <50>;
-            key-positions = <19 20>; // L + U
+            key-positions = <7 8>; // L + U
             bindings = <&kp LBKT>;
         };
 
         combo_rbrc {
             timeout-ms = <50>;
-            key-positions = <20 21>; // U + Y
+            key-positions = <8 9>; // U + Y
             bindings = <&kp RBKT>;
         };
 
         // Accent combos (Right Alt + key combinations)
         combo_acute {
             timeout-ms = <50>;
-            key-positions = <26 15>; // E + T
+            key-positions = <20 16>; // E + T
             bindings = <&kp RA(SQT)>;
         };
 
         combo_grave {
             timeout-ms = <50>;
-            key-positions = <26 27>; // E + I
+            key-positions = <20 21>; // E + I
             bindings = <&kp RA(GRAVE)>;
         };
 
         combo_circ {
             timeout-ms = <50>;
-            key-positions = <26 16>; // E + V
+            key-positions = <20 28>; // E + V
             bindings = <&kp RA(N6)>;
         };
 
         combo_tilde {
             timeout-ms = <50>;
-            key-positions = <26 25>; // E + N
+            key-positions = <20 19>; // E + N
             bindings = <&kp RA(LS(GRAVE))>;
         };
 
         combo_cedil {
             timeout-ms = <50>;
-            key-positions = <26 15>; // E + C
+            key-positions = <20 27>; // E + C
             bindings = <&kp RA(COMMA)>;
         };
 
         // One-shot layer combos
         combo_web {
             timeout-ms = <50>;
-            key-positions = <28 7>; // O + W
+            key-positions = <22 2>; // O + W
             bindings = <&sl LAYER_WEB>;
         };
 
         combo_tools {
             timeout-ms = <50>;
-            key-positions = <28 15>; // O + T
+            key-positions = <22 16>; // O + T
             bindings = <&sl LAYER_TOOLS>;
         };
     };
