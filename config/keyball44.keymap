@@ -3,8 +3,8 @@
 #define LAYER_BASE    0
 #define LAYER_NUMBER  1
 #define LAYER_NAVIG   2
-#define LAYER_QWERTY  3
-#define LAYER_POINTER 4
+#define LAYER_POINTER 3
+#define LAYER_QWERTY  4
 #define LAYER_WIN_MGR 5
 #define LAYER_FN      6
 #define LAYER_MEDIA   7
@@ -218,22 +218,6 @@
             >;
         };
 
-        // QWERTY Layer
-        qwerty_layer {
-            label = "QWRT";
-            bindings = <
-// ╭────────────────────────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────────────────────────────╮
-    &kp AMPS   &kp Q        &kp W        &kp E        &kp R        &kp T              &kp Y        &kp U        &kp I        &kp O        &kp P        &td_quot
-// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
-    &kp STAR   &mt LGUI A   &mt LCTRL S  &mt LALT D   &mt LSHFT F  &kp G              &kp H        &mt RSHFT J  &mt RALT K   &mt RCTRL L  &mt RGUI SEMI  &kp MINUS
-// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
-    &kp BSLH   &kp Z        &kp X        &kp C        &kp V        &kp B              &kp N        &kp M        &kp COMMA    &kp DOT      &kp SLASH    &kp EQUAL
-// ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
-    &trans     &trans                    &kp SPACE    &lt LAYER_NUMBER ESC           &lt LAYER_NAVIG BSPC  &lt LAYER_MEDIA ENTER     &kp DEL
-//                                     ╰────────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
-            >;
-        };
-
         // Pointer Layer (Mouse/Trackball)
         pointer_layer {
             label = "PTR";
@@ -246,6 +230,22 @@
     &none      &none        &none        &none        &none        &none              &none        &mkp MB4     &mkp MB5     &none        &none        &none
 // ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
     &trans     &trans                    &mkp MCLK    &mkp LCLK    &mkp RCLK          &mkp LCLK    &mkp RCLK                              &trans
+//                                     ╰────────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
+            >;
+        };
+
+        // QWERTY Layer
+        qwerty_layer {
+            label = "QWRT";
+            bindings = <
+// ╭────────────────────────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────────────────────────────╮
+    &kp AMPS   &kp Q        &kp W        &kp E        &kp R        &kp T              &kp Y        &kp U        &kp I        &kp O        &kp P        &td_quot
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &kp STAR   &mt LGUI A   &mt LCTRL S  &mt LALT D   &mt LSHFT F  &kp G              &kp H        &mt RSHFT J  &mt RALT K   &mt RCTRL L  &mt RGUI SEMI  &kp MINUS
+// ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
+    &kp BSLH   &kp Z        &kp X        &kp C        &kp V        &kp B              &kp N        &kp M        &kp COMMA    &kp DOT      &kp SLASH    &kp EQUAL
+// ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
+    &kp LGUI   &kp LALT            &td_tab      &kp SPACE       &lt LAYER_NUMBER ESC         &lt LAYER_NAVIG BSPC  &lt LAYER_MEDIA ENTER          &kp DEL
 //                                     ╰────────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
             >;
         };
