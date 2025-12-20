@@ -79,6 +79,15 @@
             tapping-term-ms = <150>;
             bindings = <&kp ENTER>, <&kp LG(ENTER)>;
         };
+
+        // Tap dance for PSCR (tap) / LS+PSCR (double tap)
+        td_pscr: tap_dance_pscr {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TAP_DANCE_PSCR";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp PSCRN>, <&kp LS(PSCRN)>;
+        };
     };
 
     // Combos for quick access
@@ -207,9 +216,9 @@
 // ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
     &none      &kp LEFT     &kp UP       &kp DOWN     &kp RIGHT    &none              &none        &kp RSHFT    &kp RALT     &kp RCTRL    &kp RGUI     &none
 // ├────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────┤
-    &none      &kp HOME     &kp PG_UP    &kp PG_DN    &kp END      &kp INS            &none        &none        &none        &none        &none        &none
+    &none      &kp HOME     &kp PG_UP    &kp PG_DN    &kp END      &kp INS            &td_pscr     &none        &none        &none        &none        &none
 // ╰────────────────────────────────────────────────────────────────────────────┤ ├─────────────────────────────────────────────────────────────────────────────────╯
-    &trans     &trans                      &kp DEL      &kp BSPC     &kp ESC           &trans       &none                                 &bt BT_CLR
+    &trans     &trans                      &kp DEL      &kp BSPC     &kp ESC          &trans       &none                                  &bt BT_CLR
 //                                       ╰──────────────────────────────────────╯ ╰──────────────────────────────────────────────────────────────╯
             >;
         };
