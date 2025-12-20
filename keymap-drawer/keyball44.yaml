@@ -121,7 +121,7 @@ layers:
   - PG DN
   - END
   - INS
-  - {t: '$$mdi:minus-circle-outline$$', type: none}
+  - '&td_pscr'
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
